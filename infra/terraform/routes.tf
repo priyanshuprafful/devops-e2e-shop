@@ -29,7 +29,7 @@ resource "aws_route_table_association" "public_rt_assoc_2" {
 # NAT + Private Route Table
 # -------------------------
 resource "aws_eip" "nat_eip" {
-  domain = vpc 
+  domain = "vpc" 
 
   tags = { 
     Name = "nat-eip"
