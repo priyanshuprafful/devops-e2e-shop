@@ -1,0 +1,23 @@
+# -------------------------
+# VPC
+# -------------------------
+resource "aws_vpc" "devops_vpc" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags = {
+    Name = "devops-vpc"
+  }
+}
+
+# -------------------------
+# Internet Gateway
+# -------------------------
+resource "aws_internet_gateway" "devops_igw" {
+  vpc_id = aws_vpc.devops_vpc.id
+
+  tags = {
+    Name = "devops-igw"
+  }
+}
