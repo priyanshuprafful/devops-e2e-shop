@@ -39,3 +39,19 @@ jobs:
         run: |
           IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
           docker push $IMAGE_URI
+
+      - name: Clean old images from ECR
+        run: |
+          aws ecr list-images \
+            --repository-name ${{ secrets.ECR_REPOSITORY }} \
+            --query 'imageIds[?imageTag!=`latest`]' \
+            --output json > old_images.json
+
+          if [ -s old_images.json ]; then
+            aws ecr batch-delete-image \
+              --repository-name ${{ secrets.ECR_REPOSITORY }} \
+              --image-ids file://old_images.json
+          else
+            echo "No old images to delete."
+          fi
+
